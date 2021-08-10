@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option optimize_for = SPEED;
+//option cc_enable_arenas = true;
+
+package rpc;
+
+// The greeting service definition.
+service EdgeService
+{
+    // Sends message to Edge via gRPC
+    rpc Send (EdgeRequest) returns (EdgeResponse) {}
+}
+
+// The request message containing the user's name.
+message MessageHeader
+{
+    int32 seq     = 1;
+    int32 type    = 2;
+    int32 subtype = 3;
+    int32 svalue  = 4;
+    int32 version = 5;
+    string source = 6;
+}
+
+// The request message 
+message EdgeRequest
+{
+    MessageHeader hdr = 1;
+    oneof payload
+    {
+        string text= 2;
+        bytes buffer = 3;
+    }
+}
+
+// The response message 
+message EdgeResponse
+{
+    MessageHeader hdr = 1;
+    int32 rc = 2;
+    oneof message
+    {
+        string text= 3;
+        bytes buffer = 4;
+    }
+}
